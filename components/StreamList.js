@@ -16,7 +16,7 @@ function StreamList() {
     localStorage.setItem("streamlist", JSON.stringify(list));
   }, [list]);
 
-  const handleAdd = () => {
+const handleAdd = () => {
     if (!input.trim()) return;
 
     if (editIndex !== null) {
@@ -27,7 +27,8 @@ function StreamList() {
     } else {
       setList([...list, { text: input, completed: false }]);
     }
-// Add this near your Add/Update button in StreamList.js
+    setInput(""); // Clear input after adding/updating
+  };
 {editIndex !== null && (
   <button 
     onClick={() => { setEditIndex(null); setInput(""); }} 
