@@ -1,47 +1,47 @@
 import React from "react";
-import { subscriptions } from "../Data";
+import { subscriptions } from "../Data"; // Make sure the path is correct
 
-function Subscription({ addToCart }) {
+function Subscriptions({ addToCart, cart }) {
   return (
     <div className="streamlist-container" style={{ maxWidth: "600px" }}>
       <h1>EZTech Store</h1>
-      {subscriptions.map((item) => (
-        <div
-          key={item.id}
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "10px",
-            borderBottom: "1px solid #ccc",
-          }}
-        >
-          <div>
-            <strong>{item.name}</strong>
-            <div>${item.price.toFixed(2)}</div>
-            <div style={{ fontSize: "12px", color: "gray" }}>
-              {item.category === "subscription" ? "Subscription" : "Accessory"}
-            </div>
-          </div>
 
-          <button
-            onClick={() => addToCart(item)}
+      {subscriptions.map((item) => {
+        // Check if the subscription is already in cart
+        const inCart = cart.some(cartItem => cartItem.id === item.id);
+
+        return (
+          <div
+            key={item.id}
             style={{
-              padding: "6px 12px",
-              backgroundColor: "#3b82f6",
-              color: "white",
-              borderRadius: "6px",
-              border: "none",
-              cursor: "pointer",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "10px",
+              borderBottom: "1px solid #ccc",
             }}
           >
-            Add to Cart
-          </button>
-        </div>
-      ))}
-      <p style={{ marginTop: "20px", fontStyle: "italic", color: "#555" }}>
-        Note: Only one subscription can be active at a time. Accessories can be added multiple times.
-      </p>
+            <span>
+              {item.name} - ${item.price.toFixed(2)}
+            </span>
+
+            <button
+              onClick={() => addToCart(item)}
+              disabled={item.category === "subscription" && inCart} // Disable if subscription already added
+              style={{
+                padding: "6px 12px",
+                backgroundColor: item.category === "subscription" && inCart ? "#9ca3af" : "#3b82f6",
+                color: "white",
+                borderRadius: "6px",
+                border: "none",
+                cursor: item.category === "subscription" && inCart ? "not-allowed" : "pointer",
+              }}
+            >
+              {item.category === "subscription" && inCart ? "Subscribed" : "Add to Cart"}
+            </button>
+          </div>
+        );
+      })}
     </div>
   );
 }
