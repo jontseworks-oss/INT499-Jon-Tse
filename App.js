@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
 import Navbar from "./components/Navbar";
 import StreamList from "./components/StreamList";
 import Movies from "./components/Movies";
 import Cart from "./components/Cart";
 import Subscriptions from "./components/Subscriptions";
-import About from "./components/About";
 import "./App.css";
 
 function App() {
@@ -21,11 +19,10 @@ function App() {
     localStorage.setItem("eztech_cart", JSON.stringify(cart));
   }, [cart]);
 
-  // Add item to cart
   const addToCart = (product) => {
     const existingItem = cart.find((item) => item.id === product.id);
 
-    // RULE: Only one subscription allowed
+    // RULE: Users restricted from adding more than one subscription at a time
     if (product.category === "subscription") {
       const hasSubscription = cart.some(item => item.category === "subscription");
       if (hasSubscription && !existingItem) {
@@ -39,28 +36,30 @@ function App() {
     }
 
     if (existingItem) {
-      // Accessories can increase quantity
-      setCart(cart.map(item =>
+      // Accessories can be added multiple times (increment quantity)
+      setCart(cart.map((item) => 
         item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
       ));
     } else {
+      // Add new item
       setCart([...cart, { ...product, quantity: 1 }]);
     }
   };
 
-  // Total items in cart for Navbar
-  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  // Calculate total items for Navbar
+  const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   return (
     <BrowserRouter>
       <Navbar cartCount={cartCount} />
-
       <Routes>
         <Route path="/" element={<StreamList />} />
         <Route path="/movies" element={<Movies />} />
-        <Route path="/subscriptions" element={<Subscriptions addToCart={addToCart} />} />
+       <Route 
+  path="/subscriptions" 
+  element={<Subscriptions addToCart={addToCart} cart={cart} />} 
+/>
         <Route path="/cart" element={<Cart cart={cart} setCart={setCart} />} />
-        <Route path="/about" element={<About />} />
       </Routes>
     </BrowserRouter>
   );
