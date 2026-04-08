@@ -5,18 +5,16 @@ function StreamList() {
   const [input, setInput] = useState("");
   const [editIndex, setEditIndex] = useState(null);
 
-  // Load from localStorage
   const [list, setList] = useState(() => {
     const saved = localStorage.getItem("streamlist");
     return saved ? JSON.parse(saved) : [];
   });
 
-  // Save to localStorage
   useEffect(() => {
     localStorage.setItem("streamlist", JSON.stringify(list));
   }, [list]);
 
-const handleAdd = () => {
+  const handleAdd = () => {
     if (!input.trim()) return;
 
     if (editIndex !== null) {
@@ -27,28 +25,18 @@ const handleAdd = () => {
     } else {
       setList([...list, { text: input, completed: false }]);
     }
-    setInput(""); // Clear input after adding/updating
-  };
-{editIndex !== null && (
-  <button 
-    onClick={() => { setEditIndex(null); setInput(""); }} 
-    style={{ marginLeft: "5px", backgroundColor: "#ef4444" }}
-  >
-    Cancel
-  </button>
-)}
+
     setInput("");
   };
 
   const handleDelete = (index) => {
-    const updatedList = list.filter((_, i) => i !== index);
-    setList(updatedList);
+    setList(list.filter((_, i) => i !== index));
   };
 
   const handleComplete = (index) => {
-    const updatedList = [...list];
-    updatedList[index].completed = !updatedList[index].completed;
-    setList(updatedList);
+    const updated = [...list];
+    updated[index].completed = !updated[index].completed;
+    setList(updated);
   };
 
   const handleEdit = (index) => {
@@ -75,6 +63,18 @@ const handleAdd = () => {
         {editIndex !== null ? "Update" : "Add"}
       </button>
 
+      {editIndex !== null && (
+        <button
+          onClick={() => {
+            setEditIndex(null);
+            setInput("");
+          }}
+          style={{ marginLeft: "5px", backgroundColor: "#ef4444" }}
+        >
+          Cancel
+        </button>
+      )}
+
       <button onClick={handleClearAll} style={{ marginLeft: "10px" }}>
         Clear All
       </button>
@@ -86,28 +86,21 @@ const handleAdd = () => {
               style={{
                 textDecoration: item.completed ? "line-through" : "none",
                 color: item.completed ? "gray" : "black",
-                marginRight: "10px",
               }}
             >
               {item.text}
             </span>
 
-            <div style={{ display: "inline", marginLeft: "10px" }}>
+            <div>
               <button onClick={() => handleComplete(index)}>
                 <FaCheck />
               </button>
 
-              <button
-                onClick={() => handleEdit(index)}
-                style={{ marginLeft: "5px" }}
-              >
+              <button onClick={() => handleEdit(index)}>
                 <FaEdit />
               </button>
 
-              <button
-                onClick={() => handleDelete(index)}
-                style={{ marginLeft: "5px" }}
-              >
+              <button onClick={() => handleDelete(index)}>
                 <FaTrash />
               </button>
             </div>
