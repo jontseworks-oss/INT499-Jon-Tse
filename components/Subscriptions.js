@@ -1,44 +1,43 @@
 import React from "react";
-import { subscriptions } from "../Data"; // Make sure the path is correct
+import { subscriptions } from "../Data";
 
-function Subscriptions({ addToCart, cart }) {
+function Subscriptions({ addToCart, cart, setCart }) {
+  
+  const removeFromCart = (id) => {
+    setCart(prev => prev.filter(item => item.id !== id));
+  };
+
   return (
     <div className="streamlist-container" style={{ maxWidth: "600px" }}>
       <h1>EZTech Store</h1>
 
       {subscriptions.map((item) => {
-        // Check if the subscription is already in cart
-        const inCart = cart.some(cartItem => cartItem.id === item.id);
+        const inCart = cart.some((c) => c.id === item.id);
+        const isSubscription = item.category === "subscription";
 
         return (
-          <div
-            key={item.id}
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              padding: "10px",
-              borderBottom: "1px solid #ccc",
-            }}
-          >
+          <div key={item.id} style={{
+            display: "flex",
+            justifyContent: "space-between",
+            padding: "10px",
+            borderBottom: "1px solid #ccc"
+          }}>
             <span>
               {item.name} - ${item.price.toFixed(2)}
             </span>
 
-            <button
-              onClick={() => addToCart(item)}
-              disabled={item.category === "subscription" && inCart} // Disable if subscription already added
-              style={{
-                padding: "6px 12px",
-                backgroundColor: item.category === "subscription" && inCart ? "#9ca3af" : "#3b82f6",
-                color: "white",
-                borderRadius: "6px",
-                border: "none",
-                cursor: item.category === "subscription" && inCart ? "not-allowed" : "pointer",
-              }}
-            >
-              {item.category === "subscription" && inCart ? "Subscribed" : "Add to Cart"}
-            </button>
+            {inCart && isSubscription ? (
+              <button
+                onClick={() => removeFromCart(item.id)}
+                style={{ backgroundColor: "#ef4444", color: "white" }}
+              >
+                Unsubscribe
+              </button>
+            ) : (
+              <button onClick={() => addToCart(item)}>
+                Add to Cart
+              </button>
+            )}
           </div>
         );
       })}
