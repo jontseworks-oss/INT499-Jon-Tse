@@ -4,37 +4,49 @@ body {
   margin: 0;
   padding: 0;
 }
+/* =========================
+   NAVBAR (FIXED VISIBILITY)
+========================= */
 
-/* NAVBAR */
 .navbar {
-  background-color: #1f2937;
-  color: white;
+  background-color: #ffffff;
   padding: 15px;
+  border-bottom: 2px solid #e5e7eb;
 }
 
+/* Title */
 .navbar h2 {
   margin: 0;
+  text-align: center;
+  color: #111111;
+  font-weight: 700;
 }
 
+/* Nav container */
 .nav-links {
   display: flex;
   justify-content: center;
   list-style: none;
   gap: 20px;
-  padding: 10px 0 0 0;
-  margin: 0;
+  margin: 10px 0 0 0;
+  padding: 0;
 }
 
+/* IMPORTANT: force Link styling */
+.nav-links li a,
 .nav-links a {
-  color: white;
+  color: #111111 !important;   /* FORCE DARK TEXT */
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 600;
+  font-size: 16px;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
+/* Hover effect (subtle, not hiding text) */
 .nav-links a:hover {
-  color: #38bdf8;
+  color: #2563eb !important;
 }
-
 /* MAIN CONTAINER */
 .streamlist-container {
   background: white;
@@ -98,4 +110,33 @@ li button {
 
 li button:hover {
   background-color: #d1d5db;
+}
+.store-container {
+  max-width: 600px;
+}
+
+.store-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.btn-primary {
+  background-color: #3b82f6;
+  color: white;
+  border-radius: 6px;
+  padding: 6px 12px;
+}
+
+.btn-disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+.btn-danger {
+  background-color: #ef4444;
+  color: white;
+  border-radius: 6px;
+  padding: 6px 12px;
 }
