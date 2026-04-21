@@ -1,114 +1,48 @@
-import { useState, useEffect } from "react";
-import { FaCheck, FaEdit, FaTrash } from "react-icons/fa";
+import React from "react";
+import { subscriptions } from "../Data";
 
-function StreamList() {
-  const [input, setInput] = useState("");
-  const [editIndex, setEditIndex] = useState(null);
-
-  const [list, setList] = useState(() => {
-    const saved = localStorage.getItem("streamlist");
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  useEffect(() => {
-    localStorage.setItem("streamlist", JSON.stringify(list));
-  }, [list]);
-
-  const handleAdd = () => {
-    if (!input.trim()) return;
-
-    if (editIndex !== null) {
-      const updatedList = [...list];
-      updatedList[editIndex].text = input;
-      setList(updatedList);
-      setEditIndex(null);
-    } else {
-      setList([...list, { text: input, completed: false }]);
-    }
-
-    setInput("");
-  };
-
-  const handleDelete = (index) => {
-    setList(list.filter((_, i) => i !== index));
-  };
-
-  const handleComplete = (index) => {
-    const updated = [...list];
-    updated[index].completed = !updated[index].completed;
-    setList(updated);
-  };
-
-  const handleEdit = (index) => {
-    setInput(list[index].text);
-    setEditIndex(index);
-  };
-
-  const handleClearAll = () => {
-    setList([]);
+function Subscriptions({ addToCart, cart, setCart }) {
+  
+  const removeFromCart = (id) => {
+    setCart(prev => prev.filter(item => item.id !== id));
   };
 
   return (
-    <div className="streamlist-container">
-      <h1>My Streaming List</h1>
+    <div className="streamlist-container" style={{ maxWidth: "600px" }}>
+      <h1>EZTech Store</h1>
 
-      <input
-        type="text"
-        placeholder="Enter movie/show"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-      />
+      {subscriptions.map((item) => {
+        const inCart = cart.some((c) => c.id === item.id);
+        const isSubscription = item.category === "subscription";
 
-      <button onClick={handleAdd}>
-        {editIndex !== null ? "Update" : "Add"}
-      </button>
-
-      {editIndex !== null && (
-        <button
-          onClick={() => {
-            setEditIndex(null);
-            setInput("");
-          }}
-          style={{ marginLeft: "5px", backgroundColor: "#ef4444" }}
-        >
-          Cancel
-        </button>
-      )}
-
-      <button onClick={handleClearAll} style={{ marginLeft: "10px" }}>
-        Clear All
-      </button>
-
-      <ul>
-        {list.map((item, index) => (
-          <li key={index}>
-            <span
-              style={{
-                textDecoration: item.completed ? "line-through" : "none",
-                color: item.completed ? "gray" : "black",
-              }}
-            >
-              {item.text}
+        return (
+          <div key={item.id} style={{
+            display: "flex",
+            justifyContent: "space-between",
+            padding: "10px",
+            borderBottom: "1px solid #ccc"
+          }}>
+            <span>
+              {item.name} - ${item.price.toFixed(2)}
             </span>
 
-            <div>
-              <button onClick={() => handleComplete(index)}>
-                <FaCheck />
+            {inCart && isSubscription ? (
+              <button
+                onClick={() => removeFromCart(item.id)}
+                style={{ backgroundColor: "#ef4444", color: "white" }}
+              >
+                Unsubscribe
               </button>
-
-              <button onClick={() => handleEdit(index)}>
-                <FaEdit />
+            ) : (
+              <button onClick={() => addToCart(item)}>
+                Add to Cart
               </button>
-
-              <button onClick={() => handleDelete(index)}>
-                <FaTrash />
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
 
-export default StreamList;
+export default Subscriptions;
