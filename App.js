@@ -14,8 +14,11 @@ function App() {
   });
 
   useEffect(() => {
-    localStorage.setItem("eztech_cart", JSON.stringify(cart));
-  }, [cart]);
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      console.log("App can be installed!");
+    });
+  }, []);
 
   const addToCart = (product) => {
     const existingItem = cart.find((item) => item.id === product.id);
